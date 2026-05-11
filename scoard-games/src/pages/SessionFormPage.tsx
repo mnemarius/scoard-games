@@ -40,7 +40,7 @@ export function SessionFormPage() {
     return (
       <div>
         <PageHeader title="Campaign not found" />
-        <Link to="/campaigns" className="text-brand-600 hover:underline text-sm">
+        <Link to="/campaigns" className="text-primary-700 hover:text-primary-800 hover:underline text-sm">
           ← Back to campaigns
         </Link>
       </div>
@@ -87,7 +87,7 @@ export function SessionFormPage() {
   return (
     <div>
       <div className="mb-2">
-        <Link to={`/campaigns/${campaign.id}`} className="text-sm text-slate-500 hover:text-brand-700">
+        <Link to={`/campaigns/${campaign.id}`} className="text-sm text-content-muted hover:text-primary-700">
           ← {campaign.name}
         </Link>
       </div>
@@ -110,13 +110,13 @@ export function SessionFormPage() {
 
         <Card>
           <CardHeader>
-            <h2 className="font-semibold text-slate-900">Scores</h2>
+            <h2 className="font-semibold text-content">Scores</h2>
           </CardHeader>
           <CardBody className="p-0">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-xs uppercase tracking-wide text-slate-500 border-b border-slate-200">
+                  <tr className="text-left text-xs uppercase tracking-wide text-content-muted border-b border-neutral-200">
                     <th className="py-3 px-5 font-medium">Player</th>
                     {game.categories.map((c) => (
                       <th key={c.id} className="py-3 px-3 font-medium text-right">
@@ -132,7 +132,7 @@ export function SessionFormPage() {
                     const total = totals.find((t) => t.playerId === player.id)?.total ?? 0;
                     const isWinner = winners.has(player.id);
                     return (
-                      <tr key={player.id} className="border-b border-slate-100 last:border-b-0">
+                      <tr key={player.id} className="border-b border-neutral-100 last:border-b-0">
                         <td className="py-2 px-5">
                           <div className="flex items-center gap-2">
                             <span
@@ -141,7 +141,7 @@ export function SessionFormPage() {
                             >
                               {player.name.slice(0, 1).toUpperCase()}
                             </span>
-                            <span className="font-medium text-slate-900">{player.name}</span>
+                            <span className="font-medium text-content">{player.name}</span>
                           </div>
                         </td>
                         {game.categories.map((c) => (
@@ -151,14 +151,14 @@ export function SessionFormPage() {
                               value={score?.categoryScores[c.id] ?? 0}
                               onChange={(e) => setCategoryScore(player.id, c.id, e.target.value)}
                               onFocus={(e) => e.target.select()}
-                              className="w-20 ml-auto block rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-right focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                              className="w-20 ml-auto block rounded-lg border border-neutral-300 px-2 py-1.5 text-sm text-right focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
                             />
                           </td>
                         ))}
                         <td className="py-2 px-5 text-right">
                           <span
                             className={`inline-flex items-center gap-1 font-semibold ${
-                              isWinner ? "text-brand-700" : "text-slate-900"
+                              isWinner ? "text-accent-700" : "text-content"
                             }`}
                           >
                             {isWinner && <span>★</span>}
@@ -187,7 +187,7 @@ export function SessionFormPage() {
 
         <div className="flex justify-end gap-2">
           <Link to={`/campaigns/${campaign.id}`}>
-            <Button variant="secondary">Cancel</Button>
+            <Button variant="outline" tone="neutral">Cancel</Button>
           </Link>
           <Button type="submit">{isEdit ? "Save changes" : "Save session"}</Button>
         </div>

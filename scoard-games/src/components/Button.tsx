@@ -1,34 +1,50 @@
 import type { ButtonHTMLAttributes } from "react";
+import {
+  focusRing,
+  toneGhost,
+  toneOutline,
+  toneRing,
+  toneSolid,
+  type Tone,
+} from "../theme/tones";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger";
+type Variant = "solid" | "outline" | "ghost";
 type Size = "sm" | "md";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  tone?: Tone;
   variant?: Variant;
   size?: Size;
 }
 
-const base =
-  "inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brand-500 disabled:opacity-50 disabled:cursor-not-allowed";
-
-const variants: Record<Variant, string> = {
-  primary: "bg-brand-600 text-white hover:bg-brand-700",
-  secondary: "bg-white border border-slate-300 text-slate-800 hover:bg-slate-50",
-  ghost: "text-slate-600 hover:bg-slate-100",
-  danger: "bg-red-600 text-white hover:bg-red-700",
-};
+const base = `inline-flex items-center justify-center font-medium rounded-lg transition-colors ${focusRing} disabled:opacity-50 disabled:cursor-not-allowed`;
 
 const sizes: Record<Size, string> = {
   sm: "text-sm px-3 py-1.5 gap-1.5",
   md: "text-sm px-4 py-2 gap-2",
 };
 
+const variantTable: Record<Variant, Record<Tone, string>> = {
+  solid: toneSolid,
+  outline: toneOutline,
+  ghost: toneGhost,
+};
+
 export function Button({
-  variant = "primary",
+  tone = "primary",
+  variant = "solid",
   size = "md",
   className = "",
   type = "button",
   ...rest
 }: ButtonProps) {
-  return <button type={type} className={`${base} ${variants[variant]} ${sizes[size]} ${className}`} {...rest} />;
+  const variantClass = variantTable[variant][tone];
+  const ringClass = toneRing[tone];
+  return (
+    <button
+      type={type}
+      className={`${base} focus-visible:ring-2 ${ringClass} ${variantClass} ${sizes[size]} ${className}`}
+      {...rest}
+    />
+  );
 }

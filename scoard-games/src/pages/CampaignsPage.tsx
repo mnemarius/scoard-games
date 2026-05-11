@@ -39,18 +39,18 @@ export function CampaignsPage() {
               const sessionCount = sessions.filter((s) => s.campaignId === c.id).length;
               return (
                 <Link key={c.id} to={`/campaigns/${c.id}`}>
-                  <Card className="hover:border-brand-400 hover:shadow-md transition cursor-pointer">
+                  <Card className="hover:border-primary-400 hover:shadow-md transition cursor-pointer">
                     <CardBody>
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
-                          <h3 className="font-semibold text-slate-900 truncate">{c.name}</h3>
-                          <p className="text-sm text-slate-500 mt-0.5">{game?.name ?? "(deleted game)"}</p>
+                          <h3 className="font-semibold text-content truncate">{c.name}</h3>
+                          <p className="text-sm text-content-muted mt-0.5">{game?.name ?? "(deleted game)"}</p>
                         </div>
-                        <span className="px-2 py-0.5 rounded-full bg-brand-50 text-brand-700 text-xs shrink-0">
+                        <span className="px-2 py-0.5 rounded-full bg-primary-50 text-primary-800 border border-primary-100 text-xs shrink-0">
                           {sessionCount} {sessionCount === 1 ? "session" : "sessions"}
                         </span>
                       </div>
-                      <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
+                      <div className="mt-3 flex items-center justify-between text-xs text-content-muted">
                         <span>{c.playerIds.length} players</span>
                         <span>Started {formatDate(c.createdAt)}</span>
                       </div>

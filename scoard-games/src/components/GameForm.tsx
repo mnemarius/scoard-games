@@ -75,8 +75,8 @@ export function GameForm({ initial, onSubmit, onCancel }: GameFormProps) {
 
       <div>
         <div className="flex items-center justify-between mb-2">
-          <span className="block text-sm font-medium text-slate-700">Scoring categories</span>
-          <Button variant="ghost" size="sm" onClick={addCategory}>
+          <span className="block text-sm font-medium text-content">Scoring categories</span>
+          <Button variant="ghost" tone="neutral" size="sm" onClick={addCategory}>
             + Add category
           </Button>
         </div>
@@ -87,10 +87,11 @@ export function GameForm({ initial, onSubmit, onCancel }: GameFormProps) {
                 value={c.name}
                 onChange={(e) => updateCategory(idx, e.target.value)}
                 placeholder={`Category ${idx + 1}`}
-                className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
+                className="flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-sm shadow-sm focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
               />
               <Button
                 variant="ghost"
+                tone="danger"
                 size="sm"
                 onClick={() => removeCategory(idx)}
                 disabled={categories.length === 1}
@@ -101,15 +102,15 @@ export function GameForm({ initial, onSubmit, onCancel }: GameFormProps) {
             </div>
           ))}
         </div>
-        <p className="text-xs text-slate-500 mt-2">
+        <p className="text-xs text-content-muted mt-2">
           Each session of this game records a score per category per player. The total per player is the sum.
         </p>
       </div>
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-danger-600">{error}</p>}
 
       <div className="flex justify-end gap-2 pt-2">
-        <Button variant="secondary" onClick={onCancel}>
+        <Button variant="outline" tone="neutral" onClick={onCancel}>
           Cancel
         </Button>
         <Button type="submit">{initial ? "Save changes" : "Add game"}</Button>

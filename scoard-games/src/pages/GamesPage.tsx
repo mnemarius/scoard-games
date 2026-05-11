@@ -53,29 +53,29 @@ export function GamesPage() {
               <CardBody>
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <h3 className="font-semibold text-slate-900 truncate">{g.name}</h3>
-                    {g.description && <p className="text-sm text-slate-500 mt-0.5">{g.description}</p>}
+                    <h3 className="font-semibold text-content truncate">{g.name}</h3>
+                    {g.description && <p className="text-sm text-content-muted mt-0.5">{g.description}</p>}
                     <div className="flex items-center gap-2 mt-2 text-xs">
-                      <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700">
+                      <span className="px-2 py-0.5 rounded-full bg-neutral-100 text-content">
                         {g.winRule === "highest" ? "Highest wins" : "Lowest wins"}
                       </span>
-                      <span className="text-slate-500">
+                      <span className="text-content-muted">
                         {g.categories.length} {g.categories.length === 1 ? "category" : "categories"}
                       </span>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-1">
                       {g.categories.map((c) => (
-                        <span key={c.id} className="px-2 py-0.5 rounded bg-brand-50 text-brand-700 text-xs">
+                        <span key={c.id} className="px-2 py-0.5 rounded bg-accent-50 text-accent-800 border border-accent-100 text-xs">
                           {c.name}
                         </span>
                       ))}
                     </div>
                   </div>
                   <div className="flex flex-col gap-1 shrink-0">
-                    <Button variant="ghost" size="sm" onClick={() => setEditing(g)}>
+                    <Button variant="ghost" tone="neutral" size="sm" onClick={() => setEditing(g)}>
                       Edit
                     </Button>
-                    <Button variant="ghost" size="sm" onClick={() => handleDelete(g)}>
+                    <Button variant="ghost" tone="danger" size="sm" onClick={() => handleDelete(g)}>
                       Delete
                     </Button>
                   </div>

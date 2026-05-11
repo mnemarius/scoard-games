@@ -34,7 +34,7 @@ function PlayerForm({ initial, onSubmit, onCancel }: PlayerFormProps) {
     <form onSubmit={handleSubmit} className="space-y-4">
       <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} autoFocus />
       <div>
-        <span className="block text-sm font-medium text-slate-700 mb-2">Color</span>
+        <span className="block text-sm font-medium text-content mb-2">Color</span>
         <div className="flex gap-2 flex-wrap">
           {PLAYER_COLORS.map((c) => (
             <button
@@ -42,7 +42,7 @@ function PlayerForm({ initial, onSubmit, onCancel }: PlayerFormProps) {
               type="button"
               onClick={() => setColor(c)}
               className={`h-8 w-8 rounded-full border-2 transition ${
-                color === c ? "border-slate-900 scale-110" : "border-transparent"
+                color === c ? "border-content scale-110" : "border-transparent"
               }`}
               style={{ backgroundColor: c }}
               aria-label={`Color ${c}`}
@@ -50,9 +50,9 @@ function PlayerForm({ initial, onSubmit, onCancel }: PlayerFormProps) {
           ))}
         </div>
       </div>
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-danger-600">{error}</p>}
       <div className="flex justify-end gap-2">
-        <Button variant="secondary" onClick={onCancel}>
+        <Button variant="outline" tone="neutral" onClick={onCancel}>
           Cancel
         </Button>
         <Button type="submit">{initial ? "Save" : "Add player"}</Button>
@@ -100,19 +100,19 @@ export function PlayersPage() {
                   {p.name.slice(0, 1).toUpperCase()}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <div className="font-medium text-slate-900 truncate">{p.name}</div>
+                  <div className="font-medium text-content truncate">{p.name}</div>
                   <div className="flex gap-1 mt-1">
                     <button
                       type="button"
-                      className="text-xs text-slate-500 hover:text-brand-700"
+                      className="text-xs text-content-muted hover:text-primary-700"
                       onClick={() => setEditing(p)}
                     >
                       Edit
                     </button>
-                    <span className="text-slate-300">·</span>
+                    <span className="text-content-subtle">·</span>
                     <button
                       type="button"
-                      className="text-xs text-slate-500 hover:text-red-600"
+                      className="text-xs text-content-muted hover:text-danger-600"
                       onClick={() => handleDelete(p)}
                     >
                       Delete

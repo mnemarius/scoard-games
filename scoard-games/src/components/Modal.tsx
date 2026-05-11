@@ -30,16 +30,16 @@ export function Modal({ open, onClose, title, children, footer, size = "md" }: M
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-slate-900/50" onClick={onClose} />
-      <div className={`relative bg-white rounded-xl shadow-xl w-full ${width} max-h-[90vh] flex flex-col`}>
-        <header className="px-5 py-4 border-b border-slate-200 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
-          <Button variant="ghost" size="sm" onClick={onClose} aria-label="Close">
+      <div className="absolute inset-0 bg-neutral-900/50" onClick={onClose} />
+      <div className={`relative bg-surface-raised text-content rounded-xl shadow-xl w-full ${width} max-h-[90vh] flex flex-col`}>
+        <header className="px-5 py-4 border-b border-neutral-200 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-content">{title}</h2>
+          <Button variant="ghost" tone="neutral" size="sm" onClick={onClose} aria-label="Close">
             ✕
           </Button>
         </header>
         <div className="px-5 py-4 overflow-y-auto">{children}</div>
-        {footer && <footer className="px-5 py-3 border-t border-slate-200 flex justify-end gap-2">{footer}</footer>}
+        {footer && <footer className="px-5 py-3 border-t border-neutral-200 flex justify-end gap-2">{footer}</footer>}
       </div>
     </div>
   );

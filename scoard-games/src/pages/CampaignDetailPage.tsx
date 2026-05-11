@@ -33,7 +33,7 @@ export function CampaignDetailPage() {
     return (
       <div>
         <PageHeader title="Campaign not found" />
-        <Link to="/campaigns" className="text-brand-600 hover:underline text-sm">
+        <Link to="/campaigns" className="text-primary-700 hover:text-primary-800 hover:underline text-sm">
           ← Back to campaigns
         </Link>
       </div>
@@ -44,7 +44,7 @@ export function CampaignDetailPage() {
     return (
       <div>
         <PageHeader title={campaign.name} subtitle="The game for this campaign was deleted." />
-        <Link to="/campaigns" className="text-brand-600 hover:underline text-sm">
+        <Link to="/campaigns" className="text-primary-700 hover:text-primary-800 hover:underline text-sm">
           ← Back to campaigns
         </Link>
       </div>
@@ -61,7 +61,7 @@ export function CampaignDetailPage() {
   return (
     <div>
       <div className="mb-2">
-        <Link to="/campaigns" className="text-sm text-slate-500 hover:text-brand-700">
+        <Link to="/campaigns" className="text-sm text-content-muted hover:text-primary-700">
           ← Campaigns
         </Link>
       </div>
@@ -70,10 +70,10 @@ export function CampaignDetailPage() {
         subtitle={`${game.name} · ${campaign.playerIds.length} players · ${sessions.length} sessions`}
         action={
           <div className="flex gap-2">
-            <Button variant="secondary" onClick={() => setEditing(true)}>
+            <Button variant="outline" tone="neutral" onClick={() => setEditing(true)}>
               Edit
             </Button>
-            <Button variant="ghost" onClick={handleDelete}>
+            <Button variant="ghost" tone="danger" onClick={handleDelete}>
               Delete
             </Button>
             <Link to={`/campaigns/${campaign.id}/sessions/new`}>
@@ -86,14 +86,14 @@ export function CampaignDetailPage() {
       {campaign.notes && (
         <Card className="mb-6">
           <CardBody>
-            <p className="text-sm text-slate-700 whitespace-pre-wrap">{campaign.notes}</p>
+            <p className="text-sm text-content whitespace-pre-wrap">{campaign.notes}</p>
           </CardBody>
         </Card>
       )}
 
       <Card className="mb-6">
         <CardHeader>
-          <h2 className="font-semibold text-slate-900">Leaderboard</h2>
+          <h2 className="font-semibold text-content">Leaderboard</h2>
         </CardHeader>
         <CardBody>
           <Leaderboard rows={leaderboard} players={players} game={game} />
@@ -102,7 +102,7 @@ export function CampaignDetailPage() {
 
       <Card>
         <CardHeader>
-          <h2 className="font-semibold text-slate-900">Sessions</h2>
+          <h2 className="font-semibold text-content">Sessions</h2>
         </CardHeader>
         <CardBody>
           {sessions.length === 0 ? (
@@ -116,7 +116,7 @@ export function CampaignDetailPage() {
               }
             />
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-neutral-100">
               {sessions.map((s) => {
                 const totals = getSessionTotals(s);
                 const winners = new Set(getSessionWinners(s, game.winRule));
@@ -125,7 +125,7 @@ export function CampaignDetailPage() {
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2 text-sm">
-                          <span className="font-medium text-slate-900">{formatDate(s.playedAt)}</span>
+                          <span className="font-medium text-content">{formatDate(s.playedAt)}</span>
                         </div>
                         <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-sm">
                           {totals.map((t) => {
@@ -135,26 +135,27 @@ export function CampaignDetailPage() {
                             return (
                               <span
                                 key={t.playerId}
-                                className={`flex items-center gap-1 ${isWinner ? "text-brand-700 font-semibold" : "text-slate-700"}`}
+                                className={`flex items-center gap-1 ${isWinner ? "text-accent-700 font-semibold" : "text-content"}`}
                               >
                                 {isWinner && <span>★</span>}
                                 <span>{player.name}</span>
-                                <span className="text-slate-400">·</span>
+                                <span className="text-content-subtle">·</span>
                                 <span>{t.total}</span>
                               </span>
                             );
                           })}
                         </div>
-                        {s.notes && <p className="mt-1 text-xs text-slate-500">{s.notes}</p>}
+                        {s.notes && <p className="mt-1 text-xs text-content-muted">{s.notes}</p>}
                       </div>
                       <div className="flex gap-1 shrink-0">
                         <Link to={`/campaigns/${campaign.id}/sessions/${s.id}`}>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" tone="neutral" size="sm">
                             Edit
                           </Button>
                         </Link>
                         <Button
                           variant="ghost"
+                          tone="danger"
                           size="sm"
                           onClick={() => {
                             if (confirm("Delete this session?")) removeSession(s.id);

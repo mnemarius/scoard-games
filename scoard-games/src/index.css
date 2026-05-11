@@ -2,14 +2,107 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body,
-#root {
-  height: 100%;
-}
+@layer base {
+  :root {
+    --color-primary-50: 232 240 239;
+    --color-primary-100: 200 219 216;
+    --color-primary-200: 152 187 182;
+    --color-primary-300: 104 155 148;
+    --color-primary-400: 63 119 112;
+    --color-primary-500: 31 78 74;
+    --color-primary-600: 24 64 61;
+    --color-primary-700: 18 50 48;
+    --color-primary-800: 12 36 34;
+    --color-primary-900: 6 22 20;
 
-body {
-  @apply bg-brand-100 text-brand-700 antialiased;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  margin: 0;
+    --color-accent-50: 251 243 230;
+    --color-accent-100: 245 227 194;
+    --color-accent-200: 236 204 146;
+    --color-accent-300: 221 177 106;
+    --color-accent-400: 210 161 86;
+    --color-accent-500: 201 146 75;
+    --color-accent-600: 166 120 61;
+    --color-accent-700: 130 96 47;
+    --color-accent-800: 94 70 34;
+    --color-accent-900: 59 44 22;
+
+    --color-success-50: 238 242 234;
+    --color-success-100: 214 224 203;
+    --color-success-200: 181 201 162;
+    --color-success-300: 148 177 121;
+    --color-success-400: 126 159 102;
+    --color-success-500: 107 142 90;
+    --color-success-600: 87 118 74;
+    --color-success-700: 68 92 58;
+    --color-success-800: 49 66 41;
+    --color-success-900: 31 42 26;
+
+    --color-warning-50: 251 237 226;
+    --color-warning-100: 244 210 181;
+    --color-warning-200: 232 172 129;
+    --color-warning-300: 218 139 88;
+    --color-warning-400: 207 126 72;
+    --color-warning-500: 196 115 58;
+    --color-warning-600: 163 94 48;
+    --color-warning-700: 128 73 37;
+    --color-warning-800: 92 52 27;
+    --color-warning-900: 56 31 17;
+
+    --color-danger-50: 247 226 223;
+    --color-danger-100: 236 186 180;
+    --color-danger-200: 216 138 130;
+    --color-danger-300: 194 98 87;
+    --color-danger-400: 174 75 64;
+    --color-danger-500: 155 58 47;
+    --color-danger-600: 128 48 40;
+    --color-danger-700: 101 38 31;
+    --color-danger-800: 73 26 22;
+    --color-danger-900: 45 16 13;
+
+    --color-neutral-50: 250 250 247;
+    --color-neutral-100: 242 241 236;
+    --color-neutral-200: 227 225 216;
+    --color-neutral-300: 201 197 182;
+    --color-neutral-400: 167 162 148;
+    --color-neutral-500: 132 127 113;
+    --color-neutral-600: 101 96 79;
+    --color-neutral-700: 77 72 56;
+    --color-neutral-800: 52 48 42;
+    --color-neutral-900: 30 27 23;
+
+    --color-surface: 242 241 236;
+    --color-surface-raised: 255 255 255;
+    --color-surface-sunken: 227 225 216;
+
+    --color-content: 30 27 23;
+    --color-content-muted: 101 96 79;
+    --color-content-subtle: 132 127 113;
+    --color-content-inverse: 250 250 247;
+  }
+
+  .dark {
+    --color-surface: 30 27 23;
+    --color-surface-raised: 52 48 42;
+    --color-surface-sunken: 20 18 15;
+
+    --color-content: 250 250 247;
+    --color-content-muted: 201 197 182;
+    --color-content-subtle: 167 162 148;
+    --color-content-inverse: 30 27 23;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: rgb(var(--color-surface));
+    color: rgb(var(--color-content));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+  }
 }

@@ -44,28 +44,28 @@ export function DashboardPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-slate-900">Recent sessions</h2>
-              <Link to="/campaigns" className="text-xs text-brand-600 hover:underline">
+              <h2 className="font-semibold text-content">Recent sessions</h2>
+              <Link to="/campaigns" className="text-xs text-primary-700 hover:text-primary-800 hover:underline">
                 View all
               </Link>
             </div>
           </CardHeader>
           <CardBody>
             {recentSessions.length === 0 ? (
-              <p className="text-sm text-slate-500">No sessions yet. Start a campaign and record your first play.</p>
+              <p className="text-sm text-content-muted">No sessions yet. Start a campaign and record your first play.</p>
             ) : (
-              <ul className="divide-y divide-slate-100">
+              <ul className="divide-y divide-neutral-100">
                 {recentSessions.map((s) => {
                   const campaign = campaigns.find((c) => c.id === s.campaignId);
                   return (
                     <li key={s.id} className="py-2 flex items-center justify-between text-sm">
                       <Link
                         to={campaign ? `/campaigns/${campaign.id}` : "/campaigns"}
-                        className="text-slate-900 hover:text-brand-700"
+                        className="text-content hover:text-primary-700"
                       >
                         {campaign?.name ?? "Unknown campaign"}
                       </Link>
-                      <span className="text-slate-500">{formatDate(s.playedAt)}</span>
+                      <span className="text-content-muted">{formatDate(s.playedAt)}</span>
                     </li>
                   );
                 })}
@@ -76,7 +76,7 @@ export function DashboardPage() {
 
         <Card>
           <CardHeader>
-            <h2 className="font-semibold text-slate-900">Get started</h2>
+            <h2 className="font-semibold text-content">Get started</h2>
           </CardHeader>
           <CardBody>
             {games.length === 0 && players.length === 0 ? (
@@ -89,7 +89,7 @@ export function DashboardPage() {
                       <Button>Add a game</Button>
                     </Link>
                     <Link to="/players">
-                      <Button variant="secondary">Add players</Button>
+                      <Button variant="outline" tone="neutral">Add players</Button>
                     </Link>
                   </div>
                 }
@@ -97,26 +97,26 @@ export function DashboardPage() {
             ) : (
               <ul className="space-y-2 text-sm">
                 <li className="flex items-center justify-between">
-                  <span className="text-slate-700">
+                  <span className="text-content">
                     {games.length > 0 ? "✓" : "•"} Add games you play
                   </span>
-                  <Link to="/games" className="text-brand-600 hover:underline">
+                  <Link to="/games" className="text-primary-700 hover:text-primary-800 hover:underline">
                     Manage games
                   </Link>
                 </li>
                 <li className="flex items-center justify-between">
-                  <span className="text-slate-700">
+                  <span className="text-content">
                     {players.length > 0 ? "✓" : "•"} Add players
                   </span>
-                  <Link to="/players" className="text-brand-600 hover:underline">
+                  <Link to="/players" className="text-primary-700 hover:text-primary-800 hover:underline">
                     Manage players
                   </Link>
                 </li>
                 <li className="flex items-center justify-between">
-                  <span className="text-slate-700">
+                  <span className="text-content">
                     {campaigns.length > 0 ? "✓" : "•"} Start a campaign
                   </span>
-                  <Link to="/campaigns" className="text-brand-600 hover:underline">
+                  <Link to="/campaigns" className="text-primary-700 hover:text-primary-800 hover:underline">
                     Campaigns
                   </Link>
                 </li>

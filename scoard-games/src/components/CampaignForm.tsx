@@ -40,7 +40,7 @@ export function CampaignForm({ games, players, initial, onSubmit, onCancel }: Ca
 
   if (games.length === 0 || players.length === 0) {
     return (
-      <div className="text-sm text-slate-600 space-y-3">
+      <div className="text-sm text-content-muted space-y-3">
         <p>You need at least one game and one player before creating a campaign.</p>
         <div className="flex gap-2">
           {games.length === 0 && (
@@ -50,7 +50,7 @@ export function CampaignForm({ games, players, initial, onSubmit, onCancel }: Ca
           )}
           {players.length === 0 && (
             <Link to="/players">
-              <Button variant="secondary">Add a player</Button>
+              <Button variant="outline" tone="neutral">Add a player</Button>
             </Link>
           )}
         </div>
@@ -74,10 +74,10 @@ export function CampaignForm({ games, players, initial, onSubmit, onCancel }: Ca
           </option>
         ))}
       </Select>
-      {initial && <p className="-mt-2 text-xs text-slate-500">Game can't be changed after creation.</p>}
+      {initial && <p className="-mt-2 text-xs text-content-muted">Game can't be changed after creation.</p>}
 
       <div>
-        <span className="block text-sm font-medium text-slate-700 mb-2">Players</span>
+        <span className="block text-sm font-medium text-content mb-2">Players</span>
         <div className="grid grid-cols-2 gap-2">
           {players.map((p) => {
             const selected = playerIds.includes(p.id);
@@ -87,7 +87,7 @@ export function CampaignForm({ games, players, initial, onSubmit, onCancel }: Ca
                 type="button"
                 onClick={() => togglePlayer(p.id)}
                 className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition ${
-                  selected ? "border-brand-500 bg-brand-50" : "border-slate-200 hover:bg-slate-50"
+                  selected ? "border-primary-500 bg-primary-50 text-primary-800" : "border-neutral-200 hover:bg-neutral-50"
                 }`}
               >
                 <span
@@ -97,7 +97,7 @@ export function CampaignForm({ games, players, initial, onSubmit, onCancel }: Ca
                   {p.name.slice(0, 1).toUpperCase()}
                 </span>
                 <span className="truncate">{p.name}</span>
-                {selected && <span className="ml-auto text-brand-600">✓</span>}
+                {selected && <span className="ml-auto text-primary-700">✓</span>}
               </button>
             );
           })}
@@ -106,10 +106,10 @@ export function CampaignForm({ games, players, initial, onSubmit, onCancel }: Ca
 
       <TextArea label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} />
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-danger-600">{error}</p>}
 
       <div className="flex justify-end gap-2">
-        <Button variant="secondary" onClick={onCancel}>
+        <Button variant="outline" tone="neutral" onClick={onCancel}>
           Cancel
         </Button>
         <Button type="submit">{initial ? "Save" : "Create campaign"}</Button>
