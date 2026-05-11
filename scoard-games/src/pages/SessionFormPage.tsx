@@ -66,7 +66,8 @@ export function SessionFormPage() {
     scores,
   };
   const totals = getSessionTotals(previewSession);
-  const winners = new Set(getSessionWinners(previewSession, game.winRule));
+  const hasAnyScore = totals.some((t) => t.total !== 0);
+  const winners = new Set(hasAnyScore ? getSessionWinners(previewSession, game.winRule) : []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -149,6 +150,7 @@ export function SessionFormPage() {
                               type="number"
                               value={score?.categoryScores[c.id] ?? 0}
                               onChange={(e) => setCategoryScore(player.id, c.id, e.target.value)}
+                              onFocus={(e) => e.target.select()}
                               className="w-20 ml-auto block rounded-lg border border-slate-300 px-2 py-1.5 text-sm text-right focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500"
                             />
                           </td>
