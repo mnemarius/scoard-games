@@ -40,7 +40,7 @@ export function SessionFormPage() {
     return (
       <div>
         <PageHeader title="Campaign not found" />
-        <Link to="/campaigns" className="text-primary-700 hover:text-primary-800 hover:underline text-sm">
+        <Link to="/campaigns" className="text-content-muted hover:text-primary-700 hover:underline text-sm">
           ← Back to campaigns
         </Link>
       </div>
@@ -151,7 +151,7 @@ export function SessionFormPage() {
                               value={score?.categoryScores[c.id] ?? 0}
                               onChange={(e) => setCategoryScore(player.id, c.id, e.target.value)}
                               onFocus={(e) => e.target.select()}
-                              className="w-20 ml-auto block rounded-lg border border-neutral-300 px-2 py-1.5 text-sm text-right focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                              className="w-20 ml-auto block rounded-lg border border-neutral-300 bg-surface-input text-content shadow-inner px-2 py-1.5 text-sm text-right focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500"
                             />
                           </td>
                         ))}

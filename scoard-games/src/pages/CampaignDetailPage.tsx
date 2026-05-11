@@ -33,7 +33,7 @@ export function CampaignDetailPage() {
     return (
       <div>
         <PageHeader title="Campaign not found" />
-        <Link to="/campaigns" className="text-primary-700 hover:text-primary-800 hover:underline text-sm">
+        <Link to="/campaigns" className="text-content-muted hover:text-primary-700 hover:underline text-sm">
           ← Back to campaigns
         </Link>
       </div>
@@ -44,7 +44,7 @@ export function CampaignDetailPage() {
     return (
       <div>
         <PageHeader title={campaign.name} subtitle="The game for this campaign was deleted." />
-        <Link to="/campaigns" className="text-primary-700 hover:text-primary-800 hover:underline text-sm">
+        <Link to="/campaigns" className="text-content-muted hover:text-primary-700 hover:underline text-sm">
           ← Back to campaigns
         </Link>
       </div>

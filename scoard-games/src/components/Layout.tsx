@@ -9,11 +9,11 @@ const navLinks = [
 
 export function Layout() {
   return (
-    <div className="min-h-full flex flex-col bg-surface text-content">
+    <div className="min-h-full flex flex-col bg-surface">
       <header className="bg-surface-raised border-b border-neutral-200 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <NavLink to="/" className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600 text-content-inverse font-bold">
+          <NavLink to="/" className="flex items-center gap-2.5">
+            <span className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600 text-content-inverse font-display font-bold">
               S
             </span>
             <span className="text-lg font-semibold text-content">Scoard</span>

@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    /* Primary — deep pine / spruce green #1F4E4A (base = 500) */
     --color-primary-50: 232 240 239;
     --color-primary-100: 200 219 216;
     --color-primary-200: 152 187 182;
@@ -15,6 +16,7 @@
     --color-primary-800: 12 36 34;
     --color-primary-900: 6 22 20;
 
+    /* Accent — mulled-cider amber #C9924B (base = 500) */
     --color-accent-50: 251 243 230;
     --color-accent-100: 245 227 194;
     --color-accent-200: 236 204 146;
@@ -26,6 +28,7 @@
     --color-accent-800: 94 70 34;
     --color-accent-900: 59 44 22;
 
+    /* Success — moss green #6B8E5A (base = 500) */
     --color-success-50: 238 242 234;
     --color-success-100: 214 224 203;
     --color-success-200: 181 201 162;
@@ -37,6 +40,7 @@
     --color-success-800: 49 66 41;
     --color-success-900: 31 42 26;
 
+    /* Warning — pumpkin / burnt orange #C4733A (base = 500) */
     --color-warning-50: 251 237 226;
     --color-warning-100: 244 210 181;
     --color-warning-200: 232 172 129;
@@ -48,6 +52,7 @@
     --color-warning-800: 92 52 27;
     --color-warning-900: 56 31 17;
 
+    /* Danger — dried-rose / brick red #9B3A2F (base = 500) */
     --color-danger-50: 247 226 223;
     --color-danger-100: 236 186 180;
     --color-danger-200: 216 138 130;
@@ -59,6 +64,7 @@
     --color-danger-800: 73 26 22;
     --color-danger-900: 45 16 13;
 
+    /* Neutral — warm sand → walnut (NOT cool gray) */
     --color-neutral-50: 250 250 247;
     --color-neutral-100: 242 241 236;
     --color-neutral-200: 227 225 216;
@@ -70,25 +76,17 @@
     --color-neutral-800: 52 48 42;
     --color-neutral-900: 30 27 23;
 
+    /* Surface system — flat warm cream page, white cards */
     --color-surface: 242 241 236;
     --color-surface-raised: 255 255 255;
     --color-surface-sunken: 227 225 216;
+    --color-surface-input: 255 255 255;
 
+    /* Content system — dark walnut ink on cream */
     --color-content: 30 27 23;
     --color-content-muted: 101 96 79;
     --color-content-subtle: 132 127 113;
     --color-content-inverse: 250 250 247;
-  }
-
-  .dark {
-    --color-surface: 30 27 23;
-    --color-surface-raised: 52 48 42;
-    --color-surface-sunken: 20 18 15;
-
-    --color-content: 250 250 247;
-    --color-content-muted: 201 197 182;
-    --color-content-subtle: 167 162 148;
-    --color-content-inverse: 30 27 23;
   }
 
   html,
@@ -102,7 +100,7 @@
     color: rgb(var(--color-content));
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     margin: 0;
   }
 }

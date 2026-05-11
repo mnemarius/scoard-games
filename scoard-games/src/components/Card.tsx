@@ -2,12 +2,16 @@ import type { HTMLAttributes, ReactNode } from "react";
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
+  interactive?: boolean;
 }
 
-export function Card({ className = "", children, ...rest }: CardProps) {
+export function Card({ className = "", children, interactive = false, ...rest }: CardProps) {
+  const hover = interactive
+    ? "transition-colors hover:bg-primary-50 hover:border-primary-200 hover:shadow-md cursor-pointer"
+    : "";
   return (
     <div
-      className={`bg-surface-raised text-content rounded-xl border border-neutral-200 shadow-sm ${className}`}
+      className={`bg-surface-raised text-content rounded-xl border border-neutral-200 shadow-sm ${hover} ${className}`}
       {...rest}
     >
       {children}

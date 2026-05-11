@@ -31,7 +31,7 @@ const variantTable: Record<Variant, Record<Tone, string>> = {
 };
 
 export function Button({
-  tone = "primary",
+  tone = "accent",
   variant = "solid",
   size = "md",
   className = "",

@@ -8,7 +8,6 @@ import { Modal } from "../components/Modal";
 import { PageHeader } from "../components/PageHeader";
 import { useAppData } from "../context/useAppData";
 import { useCampaigns } from "../hooks/useCampaigns";
-import { formatDate } from "../utils/format";
 
 export function CampaignsPage() {
   const { campaigns, add } = useCampaigns();
@@ -38,21 +37,24 @@ export function CampaignsPage() {
               const game = games.find((g) => g.id === c.gameId);
               const sessionCount = sessions.filter((s) => s.campaignId === c.id).length;
               return (
-                <Link key={c.id} to={`/campaigns/${c.id}`}>
-                  <Card className="hover:border-primary-400 hover:shadow-md transition cursor-pointer">
+                <Link key={c.id} to={`/campaigns/${c.id}`} className="group block">
+                  <Card interactive>
                     <CardBody>
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="min-w-0">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="min-w-0 flex-1">
                           <h3 className="font-semibold text-content truncate">{c.name}</h3>
-                          <p className="text-sm text-content-muted mt-0.5">{game?.name ?? "(deleted game)"}</p>
+                          <p className="text-sm text-content-muted group-hover:text-primary-700 transition-colors mt-0.5 truncate">
+                            {game?.name ?? "(deleted game)"}
+                          </p>
                         </div>
-                        <span className="px-2 py-0.5 rounded-full bg-primary-50 text-primary-800 border border-primary-100 text-xs shrink-0">
-                          {sessionCount} {sessionCount === 1 ? "session" : "sessions"}
-                        </span>
-                      </div>
-                      <div className="mt-3 flex items-center justify-between text-xs text-content-muted">
-                        <span>{c.playerIds.length} players</span>
-                        <span>Started {formatDate(c.createdAt)}</span>
+                        <div className="shrink-0 text-right">
+                          <div className="font-display font-bold text-3xl leading-none tracking-tight text-accent-600">
+                            {sessionCount}
+                          </div>
+                          <div className="text-[10px] uppercase tracking-wider font-medium text-content-muted mt-1">
+                            {sessionCount === 1 ? "session" : "sessions"}
+                          </div>
+                        </div>
                       </div>
                     </CardBody>
                   </Card>

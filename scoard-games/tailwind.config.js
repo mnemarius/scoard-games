@@ -15,6 +15,11 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
+      fontFamily: {
+        display: ['Fraunces', 'Iowan Old Style', 'Georgia', 'serif'],
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'SF Mono', 'Menlo', 'monospace'],
+      },
       colors: {
         primary: scale("primary"),
         accent: scale("accent"),
@@ -26,6 +31,7 @@ export default {
           DEFAULT: withAlpha("--color-surface"),
           raised: withAlpha("--color-surface-raised"),
           sunken: withAlpha("--color-surface-sunken"),
+          input: withAlpha("--color-surface-input"),
         },
         content: {
           DEFAULT: withAlpha("--color-content"),

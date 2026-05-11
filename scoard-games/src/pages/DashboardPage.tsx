@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "../components/Button";
-import { Card, CardBody, CardHeader } from "../components/Card";
+import { Card, CardHeader } from "../components/Card";
 import { EmptyState } from "../components/EmptyState";
 import { PageHeader } from "../components/PageHeader";
 import { StatTile } from "../components/StatTile";
@@ -9,6 +9,7 @@ import { useGames } from "../hooks/useGames";
 import { usePlayers } from "../hooks/usePlayers";
 import { useSessions } from "../hooks/useSessions";
 import { formatDate } from "../utils/format";
+import { getSessionTotals, getSessionWinners, sessionTotal } from "../utils/scoring";
 
 export function DashboardPage() {
   const { games } = useGames();
@@ -19,7 +20,7 @@ export function DashboardPage() {
   const recentSessions = allSessions
     .slice()
     .sort((a, b) => b.playedAt.localeCompare(a.playedAt))
-    .slice(0, 5);
+    .slice(0, 6);
 
   return (
     <div>
@@ -40,91 +41,92 @@ export function DashboardPage() {
         <StatTile label="Sessions" value={allSessions.length} />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-content">Recent sessions</h2>
-              <Link to="/campaigns" className="text-xs text-primary-700 hover:text-primary-800 hover:underline">
-                View all
-              </Link>
-            </div>
-          </CardHeader>
-          <CardBody>
-            {recentSessions.length === 0 ? (
-              <p className="text-sm text-content-muted">No sessions yet. Start a campaign and record your first play.</p>
-            ) : (
-              <ul className="divide-y divide-neutral-100">
-                {recentSessions.map((s) => {
-                  const campaign = campaigns.find((c) => c.id === s.campaignId);
-                  return (
-                    <li key={s.id} className="py-2 flex items-center justify-between text-sm">
-                      <Link
-                        to={campaign ? `/campaigns/${campaign.id}` : "/campaigns"}
-                        className="text-content hover:text-primary-700"
-                      >
-                        {campaign?.name ?? "Unknown campaign"}
-                      </Link>
-                      <span className="text-content-muted">{formatDate(s.playedAt)}</span>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-          </CardBody>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <h2 className="font-semibold text-content">Get started</h2>
-          </CardHeader>
-          <CardBody>
-            {games.length === 0 && players.length === 0 ? (
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-content">Recent sessions</h2>
+            <Link
+              to="/campaigns"
+              className="text-xs text-primary-700 hover:text-primary-800 hover:underline"
+            >
+              View all
+            </Link>
+          </div>
+        </CardHeader>
+        <div>
+          {recentSessions.length === 0 ? (
+            <div className="px-5 py-4">
               <EmptyState
-                title="No data yet"
-                description="Add a game and some players, then create your first campaign."
+                title="No sessions yet"
+                description="Record a session inside a campaign to start filling the leaderboard."
                 action={
-                  <div className="flex gap-2 justify-center">
-                    <Link to="/games">
-                      <Button>Add a game</Button>
-                    </Link>
-                    <Link to="/players">
-                      <Button variant="outline" tone="neutral">Add players</Button>
-                    </Link>
-                  </div>
+                  <Link to="/campaigns">
+                    <Button>+ New campaign</Button>
+                  </Link>
                 }
               />
-            ) : (
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-center justify-between">
-                  <span className="text-content">
-                    {games.length > 0 ? "✓" : "•"} Add games you play
-                  </span>
-                  <Link to="/games" className="text-primary-700 hover:text-primary-800 hover:underline">
-                    Manage games
-                  </Link>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span className="text-content">
-                    {players.length > 0 ? "✓" : "•"} Add players
-                  </span>
-                  <Link to="/players" className="text-primary-700 hover:text-primary-800 hover:underline">
-                    Manage players
-                  </Link>
-                </li>
-                <li className="flex items-center justify-between">
-                  <span className="text-content">
-                    {campaigns.length > 0 ? "✓" : "•"} Start a campaign
-                  </span>
-                  <Link to="/campaigns" className="text-primary-700 hover:text-primary-800 hover:underline">
-                    Campaigns
-                  </Link>
-                </li>
-              </ul>
-            )}
-          </CardBody>
-        </Card>
-      </div>
+            </div>
+          ) : (
+            <ul>
+              {recentSessions.map((s) => {
+                const campaign = campaigns.find((c) => c.id === s.campaignId);
+                const game = campaign ? games.find((g) => g.id === campaign.gameId) : undefined;
+                const winnerIds = game ? getSessionWinners(s, game.winRule) : [];
+                const winner = winnerIds[0] ? players.find((p) => p.id === winnerIds[0]) : undefined;
+                const winnerTotal = winner
+                  ? sessionTotal(s.scores.find((sc) => sc.playerId === winner.id)!)
+                  : null;
+                const totalSum = getSessionTotals(s).reduce((acc, t) => acc + t.total, 0);
+                const to = campaign ? `/campaigns/${campaign.id}/sessions/${s.id}` : "/campaigns";
+                return (
+                  <li key={s.id} className="border-b border-neutral-100 last:border-b-0">
+                    <Link
+                      to={to}
+                      className="group flex items-center gap-3 px-5 py-3 transition-colors hover:bg-primary-50"
+                    >
+                      {winner ? (
+                        <span
+                          className="h-7 w-7 rounded-full flex items-center justify-center text-content-inverse text-xs font-semibold shrink-0"
+                          style={{ backgroundColor: winner.color ?? "rgb(var(--color-primary-600))" }}
+                          aria-hidden
+                        >
+                          {winner.name.slice(0, 1).toUpperCase()}
+                        </span>
+                      ) : (
+                        <span className="h-7 w-7 rounded-full bg-neutral-200 shrink-0" aria-hidden />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-content truncate">
+                          {campaign?.name ?? "Unknown campaign"}
+                        </div>
+                        <div className="text-xs text-content-muted truncate">
+                          {winner ? (
+                            <>
+                              <span className="text-accent-600">★</span> {winner.name}
+                              {winnerTotal !== null && ` · ${winnerTotal} pts`}
+                            </>
+                          ) : (
+                            <>No winner recorded · {totalSum} pts total</>
+                          )}
+                        </div>
+                      </div>
+                      <span className="text-xs text-content-subtle whitespace-nowrap">
+                        {formatDate(s.playedAt)}
+                      </span>
+                      <span
+                        className="text-content-subtle group-hover:text-primary-700 transition-colors"
+                        aria-hidden
+                      >
+                        →
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </div>
+      </Card>
     </div>
   );
 }
