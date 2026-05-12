@@ -13,6 +13,7 @@ export interface GameFormValues {
   description: string;
   winRule: WinRule;
   categories: CategoryDraft[];
+  roundCount?: number;
 }
 
 interface GameFormProps {
@@ -31,6 +32,9 @@ export function GameForm({ initial, onSubmit, onCancel }: GameFormProps) {
   const [winRule, setWinRule] = useState<WinRule>(initial?.winRule ?? "highest");
   const [categories, setCategories] = useState<CategoryDraft[]>(
     initial?.categories.length ? initial.categories.map((c) => ({ id: c.id, name: c.name })) : [{ name: "Total" }],
+  );
+  const [roundCountStr, setRoundCountStr] = useState<string>(
+    initial?.roundCount && initial.roundCount > 0 ? String(initial.roundCount) : "",
   );
   const [error, setError] = useState<string | null>(null);
 
@@ -56,7 +60,18 @@ export function GameForm({ initial, onSubmit, onCancel }: GameFormProps) {
       setError("Add at least one scoring category (e.g. 'Total').");
       return;
     }
-    onSubmit({ name: trimmedName, description: description.trim(), winRule, categories: cleanCategories });
+    const roundCount = roundCountStr.trim() === "" ? undefined : Math.floor(Number(roundCountStr));
+    if (roundCount !== undefined && (!Number.isFinite(roundCount) || roundCount < 1 || roundCount > 100)) {
+      setError("Rounds per session must be a whole number between 1 and 100 (or blank).");
+      return;
+    }
+    onSubmit({
+      name: trimmedName,
+      description: description.trim(),
+      winRule,
+      categories: cleanCategories,
+      roundCount,
+    });
   };
 
   return (
@@ -106,6 +121,20 @@ export function GameForm({ initial, onSubmit, onCancel }: GameFormProps) {
           Each session of this game records a score per category per player. The total per player is the sum.
         </p>
       </div>
+
+      <TextField
+        label="Rounds per session (optional)"
+        type="number"
+        min={1}
+        max={100}
+        value={roundCountStr}
+        onChange={(e) => setRoundCountStr(e.target.value)}
+        placeholder="e.g. 12 for Mexican Train"
+      />
+      <p className="text-xs text-content-muted -mt-2">
+        Leave blank for a single set of scores. Set a number to record each round separately; the session total is the
+        sum across all rounds.
+      </p>
 
       {error && <p className="text-sm text-danger-600">{error}</p>}
 

@@ -4,6 +4,27 @@ export function sessionTotal(score: PlayerScore): number {
   return Object.values(score.categoryScores).reduce((sum, n) => sum + (Number.isFinite(n) ? n : 0), 0);
 }
 
+export function aggregateRounds(rounds: PlayerScore[][]): PlayerScore[] {
+  const byPlayer = new Map<ID, PlayerScore>();
+  for (const round of rounds) {
+    for (const score of round) {
+      const existing = byPlayer.get(score.playerId);
+      if (!existing) {
+        byPlayer.set(score.playerId, {
+          playerId: score.playerId,
+          categoryScores: { ...score.categoryScores },
+        });
+        continue;
+      }
+      for (const [catId, value] of Object.entries(score.categoryScores)) {
+        const v = Number.isFinite(value) ? value : 0;
+        existing.categoryScores[catId] = (existing.categoryScores[catId] ?? 0) + v;
+      }
+    }
+  }
+  return Array.from(byPlayer.values());
+}
+
 export interface SessionTotal {
   playerId: ID;
   total: number;

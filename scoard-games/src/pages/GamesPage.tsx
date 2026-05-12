@@ -62,6 +62,11 @@ export function GamesPage() {
                       <span className="text-content-muted">
                         {g.categories.length} {g.categories.length === 1 ? "category" : "categories"}
                       </span>
+                      {g.roundCount && g.roundCount > 0 && (
+                        <span className="px-2 py-0.5 rounded-full bg-accent-50 text-accent-800 border border-accent-100">
+                          {g.roundCount} rounds
+                        </span>
+                      )}
                     </div>
                     <div className="mt-3 flex flex-wrap gap-1">
                       {g.categories.map((c) => (

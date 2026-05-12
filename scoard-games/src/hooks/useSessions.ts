@@ -7,6 +7,7 @@ export interface NewSessionInput {
   campaignId: ID;
   playedAt: string;
   scores: PlayerScore[];
+  rounds?: PlayerScore[][];
   notes?: string;
 }
 
@@ -31,6 +32,7 @@ export function useSessions(campaignId?: ID) {
         campaignId: input.campaignId,
         playedAt: input.playedAt,
         scores: input.scores,
+        rounds: input.rounds,
         notes: input.notes?.trim() || undefined,
       };
       setSessions((prev) => [...prev, session]);

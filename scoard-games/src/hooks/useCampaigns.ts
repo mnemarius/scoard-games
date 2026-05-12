@@ -3,7 +3,9 @@ import { useAppData } from "../context/useAppData";
 import type { Campaign, ID } from "../types/domain";
 import { newId } from "../utils/id";
 
-export type NewCampaignInput = Omit<Campaign, "id" | "createdAt">;
+export type NewCampaignInput = Omit<Campaign, "id" | "createdAt" | "playerIds"> & {
+  playerIds?: ID[];
+};
 
 export function useCampaigns() {
   const { campaigns, setCampaigns, setSessions } = useAppData();
@@ -14,12 +16,28 @@ export function useCampaigns() {
         id: newId(),
         name: input.name.trim(),
         gameId: input.gameId,
-        playerIds: input.playerIds,
+        playerIds: input.playerIds ?? [],
         notes: input.notes?.trim() || undefined,
         createdAt: new Date().toISOString(),
       };
       setCampaigns((prev) => [...prev, campaign]);
       return campaign;
+    },
+    [setCampaigns],
+  );
+
+  const addPlayers = useCallback(
+    (campaignId: ID, playerIds: ID[]) => {
+      setCampaigns((prev) =>
+        prev.map((c) => {
+          if (c.id !== campaignId) return c;
+          const merged = [...c.playerIds];
+          for (const pid of playerIds) {
+            if (!merged.includes(pid)) merged.push(pid);
+          }
+          return merged.length === c.playerIds.length ? c : { ...c, playerIds: merged };
+        }),
+      );
     },
     [setCampaigns],
   );
@@ -41,5 +59,5 @@ export function useCampaigns() {
 
   const getById = useCallback((id: ID) => campaigns.find((c) => c.id === id), [campaigns]);
 
-  return { campaigns, add, update, remove, getById };
+  return { campaigns, add, addPlayers, update, remove, getById };
 }

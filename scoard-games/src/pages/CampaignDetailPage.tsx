@@ -176,11 +176,10 @@ export function CampaignDetailPage() {
       <Modal open={editing} onClose={() => setEditing(false)} title="Edit campaign" size="lg">
         <CampaignForm
           games={games}
-          players={players}
           initial={campaign}
           onCancel={() => setEditing(false)}
           onSubmit={(v) => {
-            update(campaign.id, { name: v.name, playerIds: v.playerIds, notes: v.notes });
+            update(campaign.id, { name: v.name, notes: v.notes });
             setEditing(false);
           }}
         />

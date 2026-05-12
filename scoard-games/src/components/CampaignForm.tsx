@@ -1,59 +1,42 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import type { Campaign, Game, Player } from "../types/domain";
+import type { Campaign, Game } from "../types/domain";
 import { Button } from "./Button";
 import { Select, TextArea, TextField } from "./TextField";
 
 export interface CampaignFormValues {
   name: string;
   gameId: string;
-  playerIds: string[];
   notes: string;
 }
 
 interface CampaignFormProps {
   games: Game[];
-  players: Player[];
   initial?: Campaign;
   onSubmit: (values: CampaignFormValues) => void;
   onCancel: () => void;
 }
 
-export function CampaignForm({ games, players, initial, onSubmit, onCancel }: CampaignFormProps) {
+export function CampaignForm({ games, initial, onSubmit, onCancel }: CampaignFormProps) {
   const [name, setName] = useState(initial?.name ?? "");
   const [gameId, setGameId] = useState(initial?.gameId ?? games[0]?.id ?? "");
-  const [playerIds, setPlayerIds] = useState<string[]>(initial?.playerIds ?? []);
   const [notes, setNotes] = useState(initial?.notes ?? "");
   const [error, setError] = useState<string | null>(null);
-
-  const togglePlayer = (id: string) => {
-    setPlayerIds((prev) => (prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]));
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return setError("Campaign needs a name.");
     if (!gameId) return setError("Pick a game.");
-    if (playerIds.length < 1) return setError("Add at least one player.");
-    onSubmit({ name: name.trim(), gameId, playerIds, notes: notes.trim() });
+    onSubmit({ name: name.trim(), gameId, notes: notes.trim() });
   };
 
-  if (games.length === 0 || players.length === 0) {
+  if (games.length === 0) {
     return (
       <div className="text-sm text-content-muted space-y-3">
-        <p>You need at least one game and one player before creating a campaign.</p>
-        <div className="flex gap-2">
-          {games.length === 0 && (
-            <Link to="/games">
-              <Button>Add a game</Button>
-            </Link>
-          )}
-          {players.length === 0 && (
-            <Link to="/players">
-              <Button variant="outline" tone="neutral">Add a player</Button>
-            </Link>
-          )}
-        </div>
+        <p>You need at least one game before creating a campaign.</p>
+        <Link to="/games">
+          <Button>Add a game</Button>
+        </Link>
       </div>
     );
   }
@@ -76,35 +59,11 @@ export function CampaignForm({ games, players, initial, onSubmit, onCancel }: Ca
       </Select>
       {initial && <p className="-mt-2 text-xs text-content-muted">Game can't be changed after creation.</p>}
 
-      <div>
-        <span className="block text-sm font-medium text-content mb-2">Players</span>
-        <div className="grid grid-cols-2 gap-2">
-          {players.map((p) => {
-            const selected = playerIds.includes(p.id);
-            return (
-              <button
-                key={p.id}
-                type="button"
-                onClick={() => togglePlayer(p.id)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition ${
-                  selected ? "border-primary-500 bg-primary-50 text-primary-800" : "border-neutral-200 hover:bg-neutral-50"
-                }`}
-              >
-                <span
-                  className="h-6 w-6 rounded-full flex items-center justify-center text-white text-xs font-semibold"
-                  style={{ backgroundColor: p.color ?? "#7c3aed" }}
-                >
-                  {p.name.slice(0, 1).toUpperCase()}
-                </span>
-                <span className="truncate">{p.name}</span>
-                {selected && <span className="ml-auto text-primary-700">✓</span>}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
       <TextArea label="Notes (optional)" value={notes} onChange={(e) => setNotes(e.target.value)} />
+
+      <p className="text-xs text-content-muted">
+        Players join automatically when you add them to a session.
+      </p>
 
       {error && <p className="text-sm text-danger-600">{error}</p>}
 

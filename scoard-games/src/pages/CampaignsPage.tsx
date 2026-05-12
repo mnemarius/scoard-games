@@ -11,7 +11,7 @@ import { useCampaigns } from "../hooks/useCampaigns";
 
 export function CampaignsPage() {
   const { campaigns, add } = useCampaigns();
-  const { games, players, sessions } = useAppData();
+  const { games, sessions } = useAppData();
   const [creating, setCreating] = useState(false);
 
   return (
@@ -67,7 +67,6 @@ export function CampaignsPage() {
       <Modal open={creating} onClose={() => setCreating(false)} title="New campaign" size="lg">
         <CampaignForm
           games={games}
-          players={players}
           onCancel={() => setCreating(false)}
           onSubmit={(v) => {
             add(v);
