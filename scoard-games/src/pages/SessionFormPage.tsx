@@ -9,7 +9,7 @@ import { useCampaigns } from "../hooks/useCampaigns";
 import { useSessions } from "../hooks/useSessions";
 import type { CategoryScores, Game, PlayerScore } from "../types/domain";
 import { todayInputValue } from "../utils/format";
-import { aggregateRounds, getSessionTotals, getSessionWinners, sessionTotal } from "../utils/scoring";
+import { aggregateRounds, getSessionTotals, getSessionWinners } from "../utils/scoring";
 
 function emptyCategoryScores(game: Game): CategoryScores {
   return Object.fromEntries(game.categories.map((c) => [c.id, 0])) as CategoryScores;
@@ -206,84 +206,12 @@ export function SessionFormPage() {
           </CardBody>
         </Card>
 
-        {useRounds &&
-          rounds.map((round, roundIdx) => {
-            const roundTotals = round.map((s) => ({ playerId: s.playerId, total: sessionTotal(s) }));
-            return (
-              <Card key={roundIdx}>
-                <CardHeader className="flex items-center justify-between gap-3">
-                  <h2 className="font-semibold text-content">
-                    Round {roundIdx + 1}
-                    <span className="text-content-muted font-normal"> / {roundCount}</span>
-                  </h2>
-                </CardHeader>
-                <CardBody className="p-0">
-                  {sessionPlayers.length === 0 ? (
-                    <div className="px-5 py-8 text-center text-sm text-content-muted">
-                      No players in this session yet. Add one below.
-                    </div>
-                  ) : (
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="text-left text-xs uppercase tracking-wide text-content-muted border-b border-neutral-200">
-                            <th className="py-3 px-5 font-medium">Player</th>
-                            {game.categories.map((c) => (
-                              <th key={c.id} className="py-3 px-3 font-medium text-right">
-                                {c.name}
-                              </th>
-                            ))}
-                            <th className="py-3 px-5 font-medium text-right">Round total</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {sessionPlayers.map((player) => {
-                            const score = round.find((s) => s.playerId === player.id);
-                            const roundTotal = roundTotals.find((t) => t.playerId === player.id)?.total ?? 0;
-                            return (
-                              <tr key={player.id} className="border-b border-neutral-100 last:border-b-0">
-                                <td className="py-2 px-5">
-                                  <div className="flex items-center gap-2">
-                                    <span
-                                      className="h-7 w-7 rounded-full flex items-center justify-center text-white text-xs font-semibold shrink-0"
-                                      style={{ backgroundColor: player.color ?? "#7c3aed" }}
-                                    >
-                                      {player.name.slice(0, 1).toUpperCase()}
-                                    </span>
-                                    <span className="font-medium text-content">{player.name}</span>
-                                  </div>
-                                </td>
-                                {game.categories.map((c) => (
-                                  <td key={c.id} className="py-2 px-3">
-                                    <input
-                                      type="number"
-                                      value={score?.categoryScores[c.id] ?? 0}
-                                      onChange={(e) =>
-                                        setRoundCategoryScore(roundIdx, player.id, c.id, e.target.value)
-                                      }
-                                      onFocus={(e) => e.target.select()}
-                                      className="w-20 ml-auto block rounded-lg border border-neutral-300 bg-surface-input text-content shadow-inner px-2 py-1.5 text-sm text-right focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500"
-                                    />
-                                  </td>
-                                ))}
-                                <td className="py-2 px-5 text-right font-semibold text-content">{roundTotal}</td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
-                </CardBody>
-              </Card>
-            );
-          })}
-
         <Card>
           <CardHeader className="flex items-center justify-between gap-3">
-            <h2 className="font-semibold text-content">{useRounds ? "Session totals" : "Scores"}</h2>
+            <h2 className="font-semibold text-content">{useRounds ? "Rounds" : "Scores"}</h2>
             <span className="text-xs text-content-muted">
               {sessionPlayers.length} {sessionPlayers.length === 1 ? "player" : "players"}
+              {useRounds && ` · ${roundCount} ${roundCount === 1 ? "round" : "rounds"}`}
             </span>
           </CardHeader>
           <CardBody className="p-0">
@@ -291,18 +219,122 @@ export function SessionFormPage() {
               <div className="px-5 py-8 text-center text-sm text-content-muted">
                 No players in this session yet. Add one below.
               </div>
+            ) : useRounds ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="text-left text-xs uppercase tracking-wide text-content-muted border-b border-neutral-200">
+                      <th rowSpan={game.categories.length > 1 ? 2 : 1} className="py-3 px-5 font-medium align-bottom">
+                        Player
+                      </th>
+                      {rounds.map((_, roundIdx) => (
+                        <th
+                          key={roundIdx}
+                          colSpan={game.categories.length}
+                          className="py-3 px-3 font-medium text-center border-l border-neutral-200"
+                        >
+                          Round {roundIdx + 1}
+                        </th>
+                      ))}
+                      <th
+                        rowSpan={game.categories.length > 1 ? 2 : 1}
+                        className="py-3 px-5 font-medium text-right align-bottom border-l border-neutral-200"
+                      >
+                        Total
+                      </th>
+                      <th rowSpan={game.categories.length > 1 ? 2 : 1} className="py-3 px-5 font-medium text-right w-px align-bottom"></th>
+                    </tr>
+                    {game.categories.length > 1 && (
+                      <tr className="text-left text-[10px] uppercase tracking-wide text-content-muted border-b border-neutral-200">
+                        {rounds.map((_, roundIdx) =>
+                          game.categories.map((c, catIdx) => (
+                            <th
+                              key={`${roundIdx}-${c.id}`}
+                              className={`py-2 px-3 font-medium text-right ${
+                                catIdx === 0 ? "border-l border-neutral-200" : ""
+                              }`}
+                            >
+                              {c.name}
+                            </th>
+                          )),
+                        )}
+                      </tr>
+                    )}
+                  </thead>
+                  <tbody>
+                    {sessionPlayers.map((player) => {
+                      const total = totals.find((t) => t.playerId === player.id)?.total ?? 0;
+                      const isWinner = winners.has(player.id);
+                      return (
+                        <tr key={player.id} className="border-b border-neutral-100 last:border-b-0">
+                          <td className="py-2 px-5">
+                            <div className="flex items-center gap-2">
+                              <span
+                                className="h-7 w-7 rounded-full flex items-center justify-center text-white text-xs font-semibold shrink-0"
+                                style={{ backgroundColor: player.color ?? "#7c3aed" }}
+                              >
+                                {player.name.slice(0, 1).toUpperCase()}
+                              </span>
+                              <span className="font-medium text-content">{player.name}</span>
+                            </div>
+                          </td>
+                          {rounds.map((round, roundIdx) => {
+                            const score = round.find((s) => s.playerId === player.id);
+                            return game.categories.map((c, catIdx) => (
+                              <td
+                                key={`${roundIdx}-${c.id}`}
+                                className={`py-2 px-3 ${catIdx === 0 ? "border-l border-neutral-100" : ""}`}
+                              >
+                                <input
+                                  type="number"
+                                  value={score?.categoryScores[c.id] ?? 0}
+                                  onChange={(e) =>
+                                    setRoundCategoryScore(roundIdx, player.id, c.id, e.target.value)
+                                  }
+                                  onFocus={(e) => e.target.select()}
+                                  className="w-20 ml-auto block rounded-lg border border-neutral-300 bg-surface-input text-content shadow-inner px-2 py-1.5 text-sm text-right focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500"
+                                />
+                              </td>
+                            ));
+                          })}
+                          <td className="py-2 px-5 text-right border-l border-neutral-100">
+                            <span
+                              className={`inline-flex items-center gap-1 font-semibold ${
+                                isWinner ? "text-accent-700" : "text-content"
+                              }`}
+                            >
+                              {isWinner && <span>★</span>}
+                              {total}
+                            </span>
+                          </td>
+                          <td className="py-2 px-5 text-right">
+                            <Button
+                              variant="ghost"
+                              tone="danger"
+                              size="sm"
+                              onClick={() => removePlayerFromSession(player.id)}
+                              aria-label={`Remove ${player.name}`}
+                            >
+                              ✕
+                            </Button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="text-left text-xs uppercase tracking-wide text-content-muted border-b border-neutral-200">
                       <th className="py-3 px-5 font-medium">Player</th>
-                      {!useRounds &&
-                        game.categories.map((c) => (
-                          <th key={c.id} className="py-3 px-3 font-medium text-right">
-                            {c.name}
-                          </th>
-                        ))}
+                      {game.categories.map((c) => (
+                        <th key={c.id} className="py-3 px-3 font-medium text-right">
+                          {c.name}
+                        </th>
+                      ))}
                       <th className="py-3 px-3 font-medium text-right">Total</th>
                       <th className="py-3 px-5 font-medium text-right w-px"></th>
                     </tr>
@@ -325,18 +357,17 @@ export function SessionFormPage() {
                               <span className="font-medium text-content">{player.name}</span>
                             </div>
                           </td>
-                          {!useRounds &&
-                            game.categories.map((c) => (
-                              <td key={c.id} className="py-2 px-3">
-                                <input
-                                  type="number"
-                                  value={score?.categoryScores[c.id] ?? 0}
-                                  onChange={(e) => setCategoryScore(player.id, c.id, e.target.value)}
-                                  onFocus={(e) => e.target.select()}
-                                  className="w-20 ml-auto block rounded-lg border border-neutral-300 bg-surface-input text-content shadow-inner px-2 py-1.5 text-sm text-right focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500"
-                                />
-                              </td>
-                            ))}
+                          {game.categories.map((c) => (
+                            <td key={c.id} className="py-2 px-3">
+                              <input
+                                type="number"
+                                value={score?.categoryScores[c.id] ?? 0}
+                                onChange={(e) => setCategoryScore(player.id, c.id, e.target.value)}
+                                onFocus={(e) => e.target.select()}
+                                className="w-20 ml-auto block rounded-lg border border-neutral-300 bg-surface-input text-content shadow-inner px-2 py-1.5 text-sm text-right focus:outline-none focus:border-accent-500 focus:ring-1 focus:ring-accent-500"
+                              />
+                            </td>
+                          ))}
                           <td className="py-2 px-3 text-right">
                             <span
                               className={`inline-flex items-center gap-1 font-semibold ${
