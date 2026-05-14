@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/Button";
 import { Card, CardHeader } from "../components/Card";
 import { EmptyState } from "../components/EmptyState";
+import { Modal } from "../components/Modal";
+import { NewSessionPicker } from "../components/NewSessionPicker";
 import { PageHeader } from "../components/PageHeader";
 import { StatTile } from "../components/StatTile";
 import { useCampaigns } from "../hooks/useCampaigns";
@@ -16,6 +19,7 @@ export function DashboardPage() {
   const { players } = usePlayers();
   const { campaigns } = useCampaigns();
   const { allSessions } = useSessions();
+  const [picking, setPicking] = useState(false);
 
   const recentSessions = allSessions
     .slice()
@@ -27,7 +31,22 @@ export function DashboardPage() {
       <PageHeader
         title="Dashboard"
         subtitle="Track scores across your board game campaigns."
+        action={<Button onClick={() => setPicking(true)}>+ New session</Button>}
       />
+
+      <Modal
+        open={picking}
+        onClose={() => setPicking(false)}
+        title="New session — pick a campaign"
+        size="lg"
+      >
+        <NewSessionPicker
+          campaigns={campaigns}
+          games={games}
+          sessions={allSessions}
+          onClose={() => setPicking(false)}
+        />
+      </Modal>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <StatTile label="Games" value={games.length} />
