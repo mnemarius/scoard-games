@@ -202,6 +202,54 @@ export function SessionFormPage() {
         </div>
 
         <Card>
+          <CardHeader>
+            <h2 className="font-semibold text-content">Add players</h2>
+          </CardHeader>
+          <CardBody>
+            {players.length === 0 ? (
+              <p className="text-sm text-content-muted">
+                No players exist yet.{" "}
+                <Link to="/players" className="text-primary-700 hover:underline">
+                  Add one
+                </Link>{" "}
+                to get started.
+              </p>
+            ) : availablePlayers.length === 0 ? (
+              <p className="text-sm text-content-muted">All players are already in this session.</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {availablePlayers.map((p) => {
+                  const inCampaign = campaign.playerIds.includes(p.id);
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => addPlayerToSession(p.id)}
+                      className="flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-200 hover:border-primary-500 hover:bg-primary-50 text-sm text-content transition"
+                    >
+                      <span
+                        className="h-6 w-6 rounded-full flex items-center justify-center text-content-inverse text-xs font-semibold"
+                        style={{ backgroundColor: p.color ?? "rgb(var(--color-primary-600))" }}
+                      >
+                        {p.name.slice(0, 1).toUpperCase()}
+                      </span>
+                      <span className="truncate">{p.name}</span>
+                      {!inCampaign && (
+                        <span className="text-[10px] uppercase tracking-wider text-accent-700 font-semibold">
+                          new
+                        </span>
+                      )}
+                      <span className="text-content-muted">+</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </CardBody>
+        </Card>
+
+
+        <Card>
           <CardHeader className="!py-3">
             <div className="flex items-center gap-1.5 flex-wrap">
               {rounds.map((round, i) => {
@@ -354,53 +402,7 @@ export function SessionFormPage() {
           </CardBody>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <h2 className="font-semibold text-content">Add players</h2>
-          </CardHeader>
-          <CardBody>
-            {players.length === 0 ? (
-              <p className="text-sm text-content-muted">
-                No players exist yet.{" "}
-                <Link to="/players" className="text-primary-700 hover:underline">
-                  Add one
-                </Link>{" "}
-                to get started.
-              </p>
-            ) : availablePlayers.length === 0 ? (
-              <p className="text-sm text-content-muted">All players are already in this session.</p>
-            ) : (
-              <div className="flex flex-wrap gap-2">
-                {availablePlayers.map((p) => {
-                  const inCampaign = campaign.playerIds.includes(p.id);
-                  return (
-                    <button
-                      key={p.id}
-                      type="button"
-                      onClick={() => addPlayerToSession(p.id)}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-200 hover:border-primary-500 hover:bg-primary-50 text-sm text-content transition"
-                    >
-                      <span
-                        className="h-6 w-6 rounded-full flex items-center justify-center text-content-inverse text-xs font-semibold"
-                        style={{ backgroundColor: p.color ?? "rgb(var(--color-primary-600))" }}
-                      >
-                        {p.name.slice(0, 1).toUpperCase()}
-                      </span>
-                      <span className="truncate">{p.name}</span>
-                      {!inCampaign && (
-                        <span className="text-[10px] uppercase tracking-wider text-accent-700 font-semibold">
-                          new
-                        </span>
-                      )}
-                      <span className="text-content-muted">+</span>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </CardBody>
-        </Card>
-
+        
         <Card>
           <CardBody>
             <TextArea
