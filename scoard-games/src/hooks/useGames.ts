@@ -18,7 +18,6 @@ export function useGames() {
         description: input.description?.trim() || undefined,
         winRule: input.winRule,
         categories: input.categories.map((c) => ({ id: c.id ?? newId(), name: c.name.trim() })),
-        roundCount: input.roundCount && input.roundCount > 0 ? input.roundCount : undefined,
         createdAt: new Date().toISOString(),
       };
       setGames((prev) => [...prev, game]);

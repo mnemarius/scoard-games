@@ -13,7 +13,6 @@ export interface Game {
   description?: string;
   winRule: WinRule;
   categories: ScoreCategory[];
-  roundCount?: number;
   createdAt: string;
 }
 
