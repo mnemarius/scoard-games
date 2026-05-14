@@ -27,11 +27,6 @@ export function DashboardPage() {
       <PageHeader
         title="Dashboard"
         subtitle="Track scores across your board game campaigns."
-        action={
-          <Link to="/campaigns">
-            <Button>+ New campaign</Button>
-          </Link>
-        }
       />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -59,11 +54,6 @@ export function DashboardPage() {
               <EmptyState
                 title="No sessions yet"
                 description="Record a session inside a campaign to start filling the leaderboard."
-                action={
-                  <Link to="/campaigns">
-                    <Button>+ New campaign</Button>
-                  </Link>
-                }
               />
             </div>
           ) : (
