@@ -209,7 +209,7 @@ export function SessionFormPage() {
             {players.length === 0 ? (
               <p className="text-sm text-content-muted">
                 No players exist yet.{" "}
-                <Link to="/players" className="text-primary-700 hover:underline">
+                <Link to="/players" className="font-semibold text-primary-700 underline hover:text-primary-800">
                   Add one
                 </Link>{" "}
                 to get started.
