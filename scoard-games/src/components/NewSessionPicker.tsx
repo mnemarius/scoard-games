@@ -1,7 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCampaigns } from "../hooks/useCampaigns";
 import type { Campaign, Game, Session } from "../types/domain";
 import { formatDate } from "../utils/format";
+import { Button } from "./Button";
+import { CampaignForm } from "./CampaignForm";
+import { EmptyState } from "./EmptyState";
 
 interface NewSessionPickerProps {
   campaigns: Campaign[];
@@ -12,6 +16,8 @@ interface NewSessionPickerProps {
 
 export function NewSessionPicker({ campaigns, games, sessions, onClose }: NewSessionPickerProps) {
   const navigate = useNavigate();
+  const { add: addCampaign } = useCampaigns();
+  const [creatingCampaign, setCreatingCampaign] = useState(false);
 
   const sorted = useMemo(() => {
     const lastPlayedAt = (campaignId: string): string => {
@@ -24,11 +30,27 @@ export function NewSessionPicker({ campaigns, games, sessions, onClose }: NewSes
     return campaigns.slice().sort((a, b) => lastPlayedAt(b.id).localeCompare(lastPlayedAt(a.id)));
   }, [campaigns, sessions]);
 
+  if (creatingCampaign) {
+    return (
+      <CampaignForm
+        games={games}
+        onCancel={() => setCreatingCampaign(false)}
+        onSubmit={(v) => {
+          const created = addCampaign(v);
+          onClose();
+          navigate(`/campaigns/${created.id}/sessions/new`);
+        }}
+      />
+    );
+  }
+
   if (campaigns.length === 0) {
     return (
-      <p className="text-sm text-content-muted m-0">
-        No campaigns yet. Create one first to record a session.
-      </p>
+      <EmptyState
+        title="No campaigns yet"
+        description="Create a campaign to record your first session."
+        action={<Button onClick={() => setCreatingCampaign(true)}>New campaign</Button>}
+      />
     );
   }
 
