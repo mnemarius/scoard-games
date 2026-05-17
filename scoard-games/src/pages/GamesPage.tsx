@@ -47,7 +47,7 @@ export function GamesPage() {
           action={<Button onClick={() => setCreating(true)}>Add a game</Button>}
         />
       ) : (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-4">
           {games.map((g) => (
             <Card key={g.id}>
               <CardBody>

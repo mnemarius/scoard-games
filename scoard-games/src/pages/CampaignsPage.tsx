@@ -29,7 +29,7 @@ export function CampaignsPage() {
           action={<Button onClick={() => setCreating(true)}>New campaign</Button>}
         />
       ) : (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid sm:grid-cols-2 gap-4">
           {campaigns
             .slice()
             .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
