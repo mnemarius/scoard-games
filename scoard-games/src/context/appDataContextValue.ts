@@ -6,7 +6,6 @@ export interface AppDataState {
   players: Player[];
   campaigns: Campaign[];
   sessions: Session[];
-  setGames: React.Dispatch<React.SetStateAction<Game[]>>;
   setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
   setCampaigns: React.Dispatch<React.SetStateAction<Campaign[]>>;
   setSessions: React.Dispatch<React.SetStateAction<Session[]>>;

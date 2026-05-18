@@ -1,5 +1,7 @@
 import { useCallback } from "react";
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useAppData } from "../context/useAppData";
+import { db } from "../lib/firebase";
 import type { Game, ID } from "../types/domain";
 import { newId } from "../utils/id";
 
@@ -8,23 +10,20 @@ export type NewGameInput = Omit<Game, "id" | "createdAt" | "categories"> & {
 };
 
 export function useGames() {
-  const { games, setGames, campaigns } = useAppData();
+  const { games, campaigns } = useAppData();
 
-  const add = useCallback(
-    (input: NewGameInput): Game => {
-      const game: Game = {
-        id: newId(),
-        name: input.name.trim(),
-        description: input.description?.trim() || undefined,
-        winRule: input.winRule,
-        categories: input.categories.map((c) => ({ id: c.id ?? newId(), name: c.name.trim() })),
-        createdAt: new Date().toISOString(),
-      };
-      setGames((prev) => [...prev, game]);
-      return game;
-    },
-    [setGames],
-  );
+  const add = useCallback((input: NewGameInput): Game => {
+    const game: Game = {
+      id: newId(),
+      name: input.name.trim(),
+      description: input.description?.trim() || undefined,
+      winRule: input.winRule,
+      categories: input.categories.map((c) => ({ id: c.id ?? newId(), name: c.name.trim() })),
+      createdAt: new Date().toISOString(),
+    };
+    void setDoc(doc(db, "games", game.id), game);
+    return game;
+  }, []);
 
   const update = useCallback(
     (
@@ -33,29 +32,23 @@ export function useGames() {
         categories?: Array<{ id?: ID; name: string }>;
       },
     ) => {
-      setGames((prev) =>
-        prev.map((g) =>
-          g.id === id
-            ? {
-                ...g,
-                ...patch,
-                categories: patch.categories
-                  ? patch.categories.map((c) => ({ id: c.id ?? newId(), name: c.name.trim() }))
-                  : g.categories,
-              }
-            : g,
-        ),
-      );
+      const existing = games.find((g) => g.id === id);
+      if (!existing) return;
+      const next: Game = {
+        ...existing,
+        ...patch,
+        categories: patch.categories
+          ? patch.categories.map((c) => ({ id: c.id ?? newId(), name: c.name.trim() }))
+          : existing.categories,
+      };
+      void setDoc(doc(db, "games", id), next);
     },
-    [setGames],
+    [games],
   );
 
-  const remove = useCallback(
-    (id: ID) => {
-      setGames((prev) => prev.filter((g) => g.id !== id));
-    },
-    [setGames],
-  );
+  const remove = useCallback((id: ID) => {
+    void deleteDoc(doc(db, "games", id));
+  }, []);
 
   const getById = useCallback((id: ID): Game | undefined => games.find((g) => g.id === id), [games]);
 
