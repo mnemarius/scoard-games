@@ -21,53 +21,7 @@ interface GameFormProps {
   onCancel: () => void;
 }
 
-interface GamePreset {
-  id: string;
-  label: string;
-  winRule: WinRule;
-  categories: string[];
-}
-
-const PRESETS: GamePreset[] = [
-  { id: "__custom", label: "Custom game", winRule: "highest", categories: [] },
-  {
-    id: "catan",
-    label: "Settlers of Catan",
-    winRule: "highest",
-    categories: ["Settlements", "Cities", "Longest road", "Largest army", "Dev cards"],
-  },
-  {
-    id: "wingspan",
-    label: "Wingspan",
-    winRule: "highest",
-    categories: ["Birds", "Bonus cards", "End-of-round", "Eggs", "Food on cards", "Tucked cards"],
-  },
-  {
-    id: "azul",
-    label: "Azul",
-    winRule: "highest",
-    categories: ["Tile score", "Rows", "Columns", "Color sets"],
-  },
-  {
-    id: "ttr",
-    label: "Ticket to Ride",
-    winRule: "highest",
-    categories: ["Routes", "Longest road", "Completed tickets", "Globetrotter"],
-  },
-  {
-    id: "7w",
-    label: "7 Wonders",
-    winRule: "highest",
-    categories: ["Military", "Treasury", "Wonder", "Civilian", "Commercial", "Guilds", "Science"],
-  },
-  { id: "splendor", label: "Splendor", winRule: "highest", categories: ["Prestige points"] },
-  { id: "dominion", label: "Dominion", winRule: "highest", categories: ["Victory points"] },
-  { id: "mxtrain", label: "Mexican Train", winRule: "lowest", categories: ["Points"] },
-  { id: "scrabble", label: "Scrabble", winRule: "highest", categories: ["Word score"] },
-];
-
 export function GameForm({ initial, onSubmit, onCancel }: GameFormProps) {
-  const [presetId, setPresetId] = useState<string>("__custom");
   const [name, setName] = useState(initial?.name ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
   const [winRule, setWinRule] = useState<WinRule>(initial?.winRule ?? "highest");
@@ -77,16 +31,6 @@ export function GameForm({ initial, onSubmit, onCancel }: GameFormProps) {
   const [catInput, setCatInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const catInputRef = useRef<HTMLInputElement>(null);
-
-  const applyPreset = (id: string) => {
-    setPresetId(id);
-    if (id === "__custom") return;
-    const preset = PRESETS.find((p) => p.id === id);
-    if (!preset) return;
-    if (!initial) setName(preset.label);
-    setWinRule(preset.winRule);
-    setCategories(preset.categories.map((n) => ({ name: n })));
-  };
 
   const addCategory = () => {
     const value = catInput.trim();
@@ -131,33 +75,6 @@ export function GameForm({ initial, onSubmit, onCancel }: GameFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {!initial && (
-        <div className="rounded-lg border border-neutral-200 bg-surface-sunken/60 px-4 py-3">
-          <div className="text-[11px] font-semibold uppercase tracking-wider text-content-muted mb-2">
-            Start from a known game
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {PRESETS.map((p) => {
-              const active = presetId === p.id;
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => applyPreset(p.id)}
-                  className={`px-3 py-1 rounded-full border text-xs font-medium transition-colors ${
-                    active
-                      ? "bg-primary-600 border-primary-500 text-content-inverse"
-                      : "bg-surface-raised border-neutral-200 text-content hover:border-primary-300 hover:bg-primary-50"
-                  }`}
-                >
-                  {p.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
       <TextField
         label="Game name"
         value={name}

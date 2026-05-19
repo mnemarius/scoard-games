@@ -1,6 +1,7 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { useAppData } from "../context/useAppData";
+import { DEFAULT_GAMES, isDefaultGameId } from "../data/defaultGames";
 import { db } from "../lib/firebase";
 import type { Game, ID } from "../types/domain";
 import { newId } from "../utils/id";
@@ -10,7 +11,12 @@ export type NewGameInput = Omit<Game, "id" | "createdAt" | "categories"> & {
 };
 
 export function useGames() {
-  const { games, campaigns } = useAppData();
+  const { games: firestoreGames, campaigns } = useAppData();
+
+  const games = useMemo<Game[]>(
+    () => [...DEFAULT_GAMES, ...firestoreGames.filter((g) => !isDefaultGameId(g.id))],
+    [firestoreGames],
+  );
 
   const add = useCallback((input: NewGameInput): Game => {
     const game: Game = {
@@ -32,7 +38,8 @@ export function useGames() {
         categories?: Array<{ id?: ID; name: string }>;
       },
     ) => {
-      const existing = games.find((g) => g.id === id);
+      if (isDefaultGameId(id)) return;
+      const existing = firestoreGames.find((g) => g.id === id);
       if (!existing) return;
       const next: Game = {
         ...existing,
@@ -43,10 +50,11 @@ export function useGames() {
       };
       void setDoc(doc(db, "games", id), next);
     },
-    [games],
+    [firestoreGames],
   );
 
   const remove = useCallback((id: ID) => {
+    if (isDefaultGameId(id)) return;
     void deleteDoc(doc(db, "games", id));
   }, []);
 
@@ -54,5 +62,7 @@ export function useGames() {
 
   const isInUse = useCallback((id: ID) => campaigns.some((c) => c.gameId === id), [campaigns]);
 
-  return { games, add, update, remove, getById, isInUse };
+  const isDefault = useCallback((id: ID) => isDefaultGameId(id), []);
+
+  return { games, add, update, remove, getById, isInUse, isDefault };
 }
